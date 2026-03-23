@@ -1,0 +1,137 @@
+/* ─── Header nav ─────────────────────────────────────────────────────────── */
+header {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header-left { display: flex; flex-direction: column; gap: 4px; }
+.header-nav  { display: flex; gap: 8px; }
+
+.nav-link {
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.1);
+}
+.nav-link:hover, .nav-link.active {
+  background: rgba(255,255,255,0.25);
+  color: white;
+}
+
+/* ─── Summary cards (audience colors) ───────────────────────────────────── */
+.card.aud-total      { border-left-color: #3b82f6; }
+.card.aud-growth     { border-left-color: #22c55e; }
+.card.aud-best       { border-left-color: #ec4899; }
+.card.aud-engagement { border-left-color: #f59e0b; }
+
+.card.aud-total      .card-amount { color: #3b82f6; }
+.card.aud-growth     .card-amount { color: #22c55e; }
+.card.aud-best       .card-amount { color: #ec4899; font-size: 1.1rem; }
+.card.aud-engagement .card-amount { color: #f59e0b; }
+
+.card-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ─── Form optional label ────────────────────────────────────────────────── */
+.optional {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ─── Goals section ──────────────────────────────────────────────────────── */
+.goals-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.goals-section h3 {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.goal-item {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.goal-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.goal-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.goal-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+.goal-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ─── Platform breakdown ──────────────────────────────────────────────────── */
+.platform-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: var(--surface2);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+.platform-card:hover { background: #2d3f57; }
+
+.plat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.plat-info   { flex: 1; min-width: 0; }
+.plat-name   { font-weight: 600; font-size: 0.95rem; }
+.plat-meta   { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.plat-stats  { text-align: right; flex-shrink: 0; }
+.plat-count  { font-weight: 700; font-size: 1.05rem; }
+.plat-diff   { font-size: 0.8rem; margin-top: 2px; display: block; }
+.plat-diff.pos     { color: var(--green); }
+.plat-diff.neg     { color: var(--red); }
+.plat-diff.neutral { color: var(--text-muted); }
+
+/* ─── Chart tabs (extra tab support) ─────────────────────────────────────── */
+.chart-tabs { flex-wrap: wrap; }
+
+/* ─── Responsive adjustments ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .plat-meta { display: none; }
+  .header-nav { gap: 6px; }
+  .nav-link { padding: 7px 12px; font-size: 0.82rem; }
+}

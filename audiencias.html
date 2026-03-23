@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estadísticas de Audiencia</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="audiencias.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>📊 Estadísticas de Audiencia</h1>
+      <p id="current-date"></p>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">💰 Finanzas</a>
+      <a href="audiencias.html" class="nav-link active">📊 Audiencias</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Summary Cards -->
+    <section class="summary" id="summary-cards">
+      <div class="card aud-total">
+        <span class="card-label">Audiencia Total</span>
+        <span class="card-amount" id="stat-total">0</span>
+        <span class="card-sub" id="stat-platforms">0 plataformas</span>
+      </div>
+      <div class="card aud-growth">
+        <span class="card-label">Crecimiento del Mes</span>
+        <span class="card-amount" id="stat-growth">+0</span>
+        <span class="card-sub" id="stat-growth-pct">0%</span>
+      </div>
+      <div class="card aud-best">
+        <span class="card-label">Mejor Plataforma</span>
+        <span class="card-amount" id="stat-best">—</span>
+        <span class="card-sub" id="stat-best-count">0 seguidores</span>
+      </div>
+      <div class="card aud-engagement">
+        <span class="card-label">Engagement Promedio</span>
+        <span class="card-amount" id="stat-engagement">0%</span>
+        <span class="card-sub" id="stat-engagement-sub">tasa de interacción</span>
+      </div>
+    </section>
+
+    <div class="content-grid">
+      <!-- Add Entry Form -->
+      <section class="form-section">
+        <h2>Registrar Datos</h2>
+        <form id="audience-form">
+          <div class="form-group">
+            <label for="platform">Plataforma</label>
+            <select id="platform" required>
+              <option value="">Seleccionar...</option>
+              <option value="youtube">▶️ YouTube</option>
+              <option value="instagram">📸 Instagram</option>
+              <option value="tiktok">🎵 TikTok</option>
+              <option value="twitter">🐦 Twitter / X</option>
+              <option value="facebook">👥 Facebook</option>
+              <option value="linkedin">💼 LinkedIn</option>
+              <option value="twitch">🎮 Twitch</option>
+              <option value="spotify">🎧 Spotify</option>
+              <option value="pinterest">📌 Pinterest</option>
+              <option value="otros">🌐 Otros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="followers">Seguidores / Suscriptores</label>
+            <input type="number" id="followers" placeholder="Ej: 10000" min="0" required />
+          </div>
+          <div class="form-group">
+            <label for="views">Vistas / Reproducciones <span class="optional">(opcional)</span></label>
+            <input type="number" id="views" placeholder="Ej: 50000" min="0" />
+          </div>
+          <div class="form-group">
+            <label for="engagement">Engagement % <span class="optional">(opcional)</span></label>
+            <input type="number" id="engagement" placeholder="Ej: 3.5" min="0" max="100" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label for="entry-date">Fecha</label>
+            <input type="date" id="entry-date" required />
+          </div>
+          <div class="form-group">
+            <label for="notes">Notas <span class="optional">(opcional)</span></label>
+            <input type="text" id="notes" placeholder="Ej: Campaña de verano..." />
+          </div>
+          <button type="submit" class="btn-add">Agregar Registro</button>
+        </form>
+
+        <!-- Goals -->
+        <div class="goals-section">
+          <h3>🎯 Metas por Plataforma</h3>
+          <div id="goals-list">
+            <p class="empty-message" style="padding:12px 0;">Sin metas configuradas.</p>
+          </div>
+          <button class="btn-secondary" id="btn-add-goal" style="width:100%;margin-top:10px;">+ Agregar Meta</button>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="charts-section">
+        <h2>Visualización</h2>
+        <div class="chart-tabs">
+          <button class="chart-tab active" data-chart="growth-chart">Evolución</button>
+          <button class="chart-tab" data-chart="compare-chart">Comparativa</button>
+          <button class="chart-tab" data-chart="dist-chart">Distribución</button>
+          <button class="chart-tab" data-chart="monthly-growth-chart">Crecimiento</button>
+        </div>
+        <div id="growth-chart" class="chart-container active">
+          <canvas id="growthCanvas"></canvas>
+          <p class="no-data" id="no-growth-data">Sin datos de evolución</p>
+        </div>
+        <div id="compare-chart" class="chart-container">
+          <canvas id="compareCanvas"></canvas>
+          <p class="no-data" id="no-compare-data">Sin datos comparativos</p>
+        </div>
+        <div id="dist-chart" class="chart-container">
+          <canvas id="distCanvas"></canvas>
+          <p class="no-data" id="no-dist-data">Sin datos de distribución</p>
+        </div>
+        <div id="monthly-growth-chart" class="chart-container">
+          <canvas id="monthlyGrowthCanvas"></canvas>
+          <p class="no-data" id="no-monthly-growth-data">Sin datos de crecimiento</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Platform Breakdown -->
+    <section class="transactions-section" style="margin-bottom:24px;">
+      <h2>Resumen por Plataforma</h2>
+      <div id="platform-breakdown">
+        <p class="empty-message">Sin datos. Agrega tu primer registro.</p>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section class="transactions-section">
+      <div class="transactions-header">
+        <h2>Historial de Registros</h2>
+        <div class="filters">
+          <select id="filter-platform">
+            <option value="all">Todas las plataformas</option>
+          </select>
+          <select id="filter-period">
+            <option value="all">Todo el tiempo</option>
+            <option value="month">Este mes</option>
+            <option value="3months">Últimos 3 meses</option>
+            <option value="6months">Últimos 6 meses</option>
+            <option value="year">Este año</option>
+          </select>
+          <button id="clear-aud-filters" class="btn-secondary">Limpiar</button>
+          <button id="export-csv" class="btn-secondary">⬇ Exportar CSV</button>
+        </div>
+      </div>
+      <div id="history-list">
+        <p class="empty-message">No hay registros. ¡Agrega el primero!</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <p>¿Eliminar este registro?</p>
+      <div class="modal-actions">
+        <button id="confirm-delete" class="btn-danger">Eliminar</button>
+        <button id="cancel-delete" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal Modal -->
+  <div id="goal-modal-overlay" class="modal-overlay hidden">
+    <div class="modal" style="min-width:320px;">
+      <h3 style="margin-bottom:18px;">🎯 Nueva Meta</h3>
+      <div class="form-group">
+        <label for="goal-platform">Plataforma</label>
+        <select id="goal-platform">
+          <option value="youtube">▶️ YouTube</option>
+          <option value="instagram">📸 Instagram</option>
+          <option value="tiktok">🎵 TikTok</option>
+          <option value="twitter">🐦 Twitter / X</option>
+          <option value="facebook">👥 Facebook</option>
+          <option value="linkedin">💼 LinkedIn</option>
+          <option value="twitch">🎮 Twitch</option>
+          <option value="spotify">🎧 Spotify</option>
+          <option value="pinterest">📌 Pinterest</option>
+          <option value="otros">🌐 Otros</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="goal-value">Meta de seguidores</label>
+        <input type="number" id="goal-value" placeholder="Ej: 100000" min="1" />
+      </div>
+      <div class="form-group">
+        <label for="goal-date">Fecha objetivo</label>
+        <input type="date" id="goal-date" />
+      </div>
+      <div class="modal-actions">
+        <button id="confirm-goal" class="btn-add" style="flex:1;">Guardar Meta</button>
+        <button id="cancel-goal" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="audiencias.js"></script>
+</body>
+</html>
