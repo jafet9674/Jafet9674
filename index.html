@@ -2,125 +2,264 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finanzas Personales</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Audience Manager</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- ── BOTTOM NAV ──────────────────────────────────────────── -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="dashboard">
+      <span class="nav-icon">📊</span>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-btn" data-view="audiences">
+      <span class="nav-icon">👥</span>
+      <span>Audiencias</span>
+    </button>
+    <button class="nav-btn" data-view="contacts">
+      <span class="nav-icon">👤</span>
+      <span>Contactos</span>
+    </button>
+    <button class="nav-btn" data-view="analytics">
+      <span class="nav-icon">📈</span>
+      <span>Análisis</span>
+    </button>
+  </nav>
+
+  <!-- ── HEADER ──────────────────────────────────────────────── -->
   <header>
-    <h1>Finanzas Personales</h1>
-    <p id="current-date"></p>
+    <div class="header-left">
+      <h1 id="view-title">Dashboard</h1>
+      <p id="header-sub">Resumen de audiencias</p>
+    </div>
+    <button id="header-action-btn" class="btn-icon" style="display:none">+</button>
   </header>
 
-  <main>
-    <!-- Summary Cards -->
-    <section class="summary">
-      <div class="card balance">
-        <span class="card-label">Balance Total</span>
-        <span class="card-amount" id="total-balance">$0.00</span>
+  <!-- ══ VIEW: DASHBOARD ════════════════════════════════════════ -->
+  <main id="view-dashboard" class="view active">
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-blue">
+        <span class="kpi-icon">👥</span>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-audiences">0</span>
+          <span class="kpi-label">Audiencias</span>
+        </div>
       </div>
-      <div class="card income">
-        <span class="card-label">Ingresos del Mes</span>
-        <span class="card-amount" id="total-income">$0.00</span>
+      <div class="kpi-card kpi-green">
+        <span class="kpi-icon">👤</span>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-contacts">0</span>
+          <span class="kpi-label">Contactos</span>
+        </div>
       </div>
-      <div class="card expense">
-        <span class="card-label">Gastos del Mes</span>
-        <span class="card-amount" id="total-expense">$0.00</span>
+      <div class="kpi-card kpi-purple">
+        <span class="kpi-icon">🏷️</span>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-tags">0</span>
+          <span class="kpi-label">Etiquetas</span>
+        </div>
       </div>
-      <div class="card savings">
-        <span class="card-label">Ahorro del Mes</span>
-        <span class="card-amount" id="total-savings">$0.00</span>
+      <div class="kpi-card kpi-orange">
+        <span class="kpi-icon">✅</span>
+        <div class="kpi-body">
+          <span class="kpi-value" id="kpi-active">0</span>
+          <span class="kpi-label">Activas</span>
+        </div>
       </div>
     </section>
 
-    <div class="content-grid">
-      <!-- Add Transaction Form -->
-      <section class="form-section">
-        <h2>Nueva Transacción</h2>
-        <form id="transaction-form">
-          <div class="form-group">
-            <label for="transaction-type">Tipo</label>
-            <div class="type-toggle">
-              <button type="button" class="toggle-btn active" data-type="expense">Gasto</button>
-              <button type="button" class="toggle-btn" data-type="income">Ingreso</button>
-            </div>
-            <input type="hidden" id="transaction-type" value="expense" />
-          </div>
-          <div class="form-group">
-            <label for="description">Descripción</label>
-            <input type="text" id="description" placeholder="Ej: Supermercado" required />
-          </div>
-          <div class="form-group">
-            <label for="amount">Monto ($)</label>
-            <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required />
-          </div>
-          <div class="form-group">
-            <label for="category">Categoría</label>
-            <select id="category" required>
-              <option value="">Seleccionar...</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="date">Fecha</label>
-            <input type="date" id="date" required />
-          </div>
-          <button type="submit" class="btn-add">Agregar Transacción</button>
-        </form>
-      </section>
-
-      <!-- Charts -->
-      <section class="charts-section">
-        <h2>Resumen Visual</h2>
-        <div class="chart-tabs">
-          <button class="chart-tab active" data-chart="expense-chart">Gastos</button>
-          <button class="chart-tab" data-chart="monthly-chart">Mensual</button>
-        </div>
-        <div id="expense-chart" class="chart-container active">
-          <canvas id="expenseCanvas"></canvas>
-          <p class="no-data" id="no-expense-data">Sin datos de gastos</p>
-        </div>
-        <div id="monthly-chart" class="chart-container">
-          <canvas id="monthlyCanvas"></canvas>
-          <p class="no-data" id="no-monthly-data">Sin datos mensuales</p>
-        </div>
-      </section>
-    </div>
-
-    <!-- Transactions List -->
-    <section class="transactions-section">
-      <div class="transactions-header">
-        <h2>Historial de Transacciones</h2>
-        <div class="filters">
-          <select id="filter-type">
-            <option value="all">Todos</option>
-            <option value="income">Ingresos</option>
-            <option value="expense">Gastos</option>
-          </select>
-          <select id="filter-category">
-            <option value="all">Todas las categorías</option>
-          </select>
-          <select id="filter-month">
-            <option value="all">Todos los meses</option>
-          </select>
-          <button id="clear-filters" class="btn-secondary">Limpiar filtros</button>
-        </div>
+    <!-- Top Audiences -->
+    <section class="card-section">
+      <div class="section-header">
+        <h2>Top Audiencias</h2>
+        <button class="btn-text" data-view="audiences">Ver todas</button>
       </div>
-      <div id="transactions-list">
-        <p class="empty-message">No hay transacciones. ¡Agrega tu primera!</p>
+      <div id="top-audiences-list">
+        <p class="empty-msg">Sin audiencias aún.</p>
+      </div>
+    </section>
+
+    <!-- Recent Contacts -->
+    <section class="card-section">
+      <div class="section-header">
+        <h2>Contactos Recientes</h2>
+        <button class="btn-text" data-view="contacts">Ver todos</button>
+      </div>
+      <div id="recent-contacts-list">
+        <p class="empty-msg">Sin contactos aún.</p>
       </div>
     </section>
   </main>
 
-  <!-- Delete Confirmation Modal -->
-  <div id="modal-overlay" class="modal-overlay hidden">
+  <!-- ══ VIEW: AUDIENCES ════════════════════════════════════════ -->
+  <main id="view-audiences" class="view">
+    <div class="search-bar">
+      <input type="text" id="audience-search" placeholder="Buscar audiencia..." />
+      <select id="audience-filter-status">
+        <option value="all">Todos</option>
+        <option value="active">Activas</option>
+        <option value="inactive">Inactivas</option>
+      </select>
+    </div>
+    <div id="audiences-list">
+      <p class="empty-msg">No hay audiencias. Crea la primera.</p>
+    </div>
+  </main>
+
+  <!-- ══ VIEW: CONTACTS ══════════════════════════════════════════ -->
+  <main id="view-contacts" class="view">
+    <div class="search-bar">
+      <input type="text" id="contact-search" placeholder="Buscar contacto..." />
+      <select id="contact-filter-audience">
+        <option value="all">Todas las audiencias</option>
+      </select>
+    </div>
+    <div id="contacts-list">
+      <p class="empty-msg">No hay contactos. Agrega el primero.</p>
+    </div>
+  </main>
+
+  <!-- ══ VIEW: ANALYTICS ════════════════════════════════════════ -->
+  <main id="view-analytics" class="view">
+    <section class="card-section">
+      <h2>Distribución por Audiencia</h2>
+      <div class="chart-wrap">
+        <canvas id="audienceChart"></canvas>
+        <p class="chart-empty" id="chart-empty-1">Sin datos</p>
+      </div>
+    </section>
+    <section class="card-section">
+      <h2>Contactos por Etiqueta</h2>
+      <div id="tag-stats-list"></div>
+    </section>
+    <section class="card-section">
+      <h2>Crecimiento (últimos 6 meses)</h2>
+      <div class="chart-wrap">
+        <canvas id="growthChart"></canvas>
+        <p class="chart-empty" id="chart-empty-2">Sin datos</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ══ MODAL: AUDIENCE ════════════════════════════════════════ -->
+  <div id="modal-audience" class="modal-overlay hidden">
     <div class="modal">
-      <p>¿Eliminar esta transacción?</p>
-      <div class="modal-actions">
-        <button id="confirm-delete" class="btn-danger">Eliminar</button>
-        <button id="cancel-delete" class="btn-secondary">Cancelar</button>
+      <div class="modal-header">
+        <h3 id="modal-audience-title">Nueva Audiencia</h3>
+        <button class="btn-close" id="close-audience-modal">✕</button>
+      </div>
+      <form id="audience-form">
+        <div class="form-group">
+          <label>Nombre *</label>
+          <input type="text" id="aud-name" placeholder="Ej: Clientes Premium" required />
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="aud-desc" rows="3" placeholder="Describe esta audiencia..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-opt active" data-value="active">Activa</button>
+            <button type="button" class="toggle-opt" data-value="inactive">Inactiva</button>
+          </div>
+          <input type="hidden" id="aud-status" value="active" />
+        </div>
+        <div class="form-group">
+          <label>Etiquetas (separadas por coma)</label>
+          <input type="text" id="aud-tags" placeholder="Ej: vip, email, retargeting" />
+        </div>
+        <div class="form-group">
+          <label>Color</label>
+          <div class="color-picker" id="aud-color-picker">
+            <button type="button" class="color-dot selected" data-color="#3b82f6" style="background:#3b82f6"></button>
+            <button type="button" class="color-dot" data-color="#22c55e" style="background:#22c55e"></button>
+            <button type="button" class="color-dot" data-color="#a855f7" style="background:#a855f7"></button>
+            <button type="button" class="color-dot" data-color="#f97316" style="background:#f97316"></button>
+            <button type="button" class="color-dot" data-color="#ef4444" style="background:#ef4444"></button>
+            <button type="button" class="color-dot" data-color="#eab308" style="background:#eab308"></button>
+            <button type="button" class="color-dot" data-color="#14b8a6" style="background:#14b8a6"></button>
+          </div>
+          <input type="hidden" id="aud-color" value="#3b82f6" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancel-audience">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: CONTACT ═════════════════════════════════════════ -->
+  <div id="modal-contact" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-contact-title">Nuevo Contacto</h3>
+        <button class="btn-close" id="close-contact-modal">✕</button>
+      </div>
+      <form id="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" id="con-name" placeholder="Juan" required />
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" id="con-lastname" placeholder="García" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="con-email" placeholder="juan@example.com" required />
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="con-phone" placeholder="+52 55 1234 5678" />
+        </div>
+        <div class="form-group">
+          <label>Audiencias</label>
+          <div id="con-audiences-checkboxes" class="checkbox-list"></div>
+        </div>
+        <div class="form-group">
+          <label>Etiquetas (separadas por coma)</label>
+          <input type="text" id="con-tags" placeholder="Ej: vip, nuevo, lead" />
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-opt active" data-value="subscribed">Suscrito</button>
+            <button type="button" class="toggle-opt" data-value="unsubscribed">No suscrito</button>
+          </div>
+          <input type="hidden" id="con-status" value="subscribed" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancel-contact">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: DELETE CONFIRM ══════════════════════════════════ -->
+  <div id="modal-delete" class="modal-overlay hidden">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>Confirmar eliminación</h3>
+        <button class="btn-close" id="close-delete-modal">✕</button>
+      </div>
+      <p id="delete-msg" style="margin:16px 0;color:var(--text-muted);font-size:0.9rem">¿Eliminar este elemento?</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-delete">Cancelar</button>
+        <button class="btn-danger" id="confirm-delete">Eliminar</button>
       </div>
     </div>
   </div>
+
+  <!-- ══ TOAST ══════════════════════════════════════════════════ -->
+  <div id="toast-container"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="app.js"></script>
